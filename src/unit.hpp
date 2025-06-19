@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cmath>
+
 // https://pdg.lbl.gov/2024/reviews/rpp2024-rev-astrophysical-constants.pdf
 constexpr double schwarzschild_radius_of_sun = 2.9532501; // km
 
@@ -18,3 +20,8 @@ constexpr double Ibb_constant =
 constexpr double kpc_in_km = 3.08567758e+16;
 
 constexpr double degree = pi / 180.0;
+
+// blackbody spectrum
+// E in keV
+// kT in keV
+inline double Ibb(double E, double kT) { return Ibb_constant * (E * E * E) / std::expm1(E / kT); }

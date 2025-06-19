@@ -4,11 +4,6 @@
 #include <iomanip>
 #include <iostream>
 
-// blackbody spectrum
-// E in keV
-// kT in keV
-double Ibb(double E, double kT) { return Ibb_constant * (E * E * E) / std::expm1(E / kT); }
-
 double cal_cos_psi(double obs_theta, double spot_theta, double spot_phi) {
   // obs_theta: angle between the observer and the star's axis
   // spot_theta: angle between the star's axis and the spot

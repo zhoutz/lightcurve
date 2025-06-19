@@ -1,4 +1,4 @@
-executables := main
+executables := sd1a sd1b
 headers := $(wildcard src/*)
 
 ifneq (command line,$(origin CXX))

@@ -7,7 +7,7 @@
 // blackbody spectrum
 // E in keV
 // kT in keV
-double Ibb(double E, double kT) { return Ibb_constant * (E * E * E) / (std::exp(E / kT) - 1); }
+double Ibb(double E, double kT) { return Ibb_constant * (E * E * E) / std::expm1(E / kT); }
 
 double cal_cos_psi(double obs_theta, double spot_theta, double spot_phi) {
   // obs_theta: angle between the observer and the star's axis
@@ -40,6 +40,8 @@ int main() {
   std::string out_fname = "sd1.txt";
   std::ofstream out_file(out_fname);
 
+  std::ofstream dbg_file("dbg.txt");
+
   for (int i = 0; i < n_phase; ++i) {
     double phase = double(i) / n_phase;
     double spot_phi = two_pi * phase;
@@ -60,8 +62,13 @@ int main() {
     double E_emit = E_obs / (delta * uu);
     double delta_phase = dt * frequency_nu;
 
-    double total_flux =
-        uu * delta4 * Ibb(E_emit, kT) * cos_alpha * lensing_factor * gamma * dS / D2;
+    double delta4gamma = delta4 * gamma;
+
+    double total_flux = uu * delta4gamma * Ibb(E_emit, kT) * cos_alpha * lensing_factor * dS / D2;
+
+    dbg_file << std::setprecision(16);
+    dbg_file << phase << " ";
+    dbg_file << cos_xi << '\n';
 
     std::cout << std::setprecision(10);
     std::cout << "phase: " << phase << ", ";

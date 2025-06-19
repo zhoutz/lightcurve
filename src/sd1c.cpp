@@ -21,8 +21,8 @@ int main() {
   double spot_theta = 90. * degree;
   double obs_theta = 90. * degree;
   double D = 0.2 * kpc_in_km;
-  double frequency_nu = 1.0; // Hz
-  int n_phase = 400;
+  double frequency_nu = 200.0; // Hz
+  int n_phase = 200;
 
   double u = Mstar / Rstar * schwarzschild_radius_of_sun; // compactness
   double uu = std::sqrt(1. - u);
@@ -68,16 +68,16 @@ int main() {
     std::cout << std::setprecision(10);
     std::cout << "phase: " << phase << ", ";
     std::cout << "delta_phase: " << delta_phase << ",";
-    std::cout << "cos_psi: " << cos_psi << ", ";
-    std::cout << "cos_alpha: " << cos_alpha << ", ";
-    std::cout << "lensing_factor: " << lensing_factor << ", ";
+    // std::cout << "cos_psi: " << cos_psi << ", ";
+    // std::cout << "cos_alpha: " << cos_alpha << ", ";
+    // std::cout << "lensing_factor: " << lensing_factor << ", ";
     // std::cout << "dt: " << dt << ", ";
-    std::cout << "E_emit: " << E_emit << ", ";
+    // std::cout << "E_emit: " << E_emit << ", ";
     std::cout << "total_flux: " << total_flux << ", ";
     std::cout << "\n";
 
     out_file << std::setprecision(16);
-    out_file << phase << " " << delta_phase << " " << total_flux << "\n";
+    out_file << phase << " " << total_flux << " " << delta_phase << "\n";
     // if (i == 2) break; // for testing, remove this line to calculate all phases
   }
 }

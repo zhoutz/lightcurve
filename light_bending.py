@@ -68,17 +68,5 @@ plt.xlabel(r"$\alpha$")
 plt.ylabel(r"$\Delta t$ (s)")
 
 plt.tight_layout()
-plt.show()
+# plt.show()
 
-
-# err = np.abs(cal_psi(u, data[1]) - data[0])
-# rel_err = err / data[0]
-# print(f"Max absolute error: {np.max(err):.4e}")
-
-
-# err = np.abs(psi(u, data[1]) - data[0])
-# rel_err = err / data[0]
-# print(f"Max absolute error: {np.max(err):.4e}")
-
-
-plt.show()

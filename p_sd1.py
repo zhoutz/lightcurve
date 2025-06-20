@@ -15,7 +15,6 @@ if False:
     plt.plot(dat1[:, 0], dat1[:, 1], ".", ms=1)
 else:
     k = np.gradient(dat1[:, 0], dat1[:, 0] + dat1[:, 2])
-    # k = 1
     plt.plot(dat1[:, 0] + dat1[:, 2], dat1[:, 1] * k, ".", ms=1)
 
 plt.plot(dat2[:, 0], dat2[:, 1], ".", ms=1)

@@ -22,7 +22,7 @@ int main() {
   double obs_theta = 90. * degree;
   double D = 0.2 * kpc_in_km;
   double frequency_nu = 200.0; // Hz
-  int n_phase = 400;
+  int n_phase = 800;
 
   double u = Mstar / Rstar * schwarzschild_radius_of_sun; // compactness
   // double u = 0.1723 * 2;
@@ -50,18 +50,18 @@ int main() {
         cos_psi == 1. ? std::sqrt(lensing_factor)
                       : std::sqrt((1. - cos_alpha * cos_alpha) / (1. - cos_psi * cos_psi));
 
-    double beta = frequency_Omega * Rstar * std::sin(spot_theta) / c_in_km_s;
+    double beta = frequency_Omega * Rstar * std::sin(spot_theta) / uu / c_in_km_s;
     double gamma = 1. / std::sqrt(1. - beta * beta);
     double cos_xi = -sin_alpha_over_sin_psi * std::sin(obs_theta) * std::sin(spot_phi);
     double delta = 1. / (gamma * (1. - beta * cos_xi));
     double delta2 = delta * delta;
+    double delta3 = delta2 * delta;
     double delta4 = delta2 * delta2;
     double E_emit = E_obs / (delta * uu);
     double delta_phase = dt * frequency_nu;
 
-    double delta4gamma = delta4 * gamma;
-
-    double total_flux = uu * delta4gamma * Ibb(E_emit, kT) * cos_alpha * lensing_factor * dS / D2;
+    double total_flux =
+        uu * delta3 * Ibb(E_emit, kT) * cos_alpha * lensing_factor * dS / D2 / gamma;
 
     dbg_file << std::setprecision(16);
     dbg_file << phase << " ";

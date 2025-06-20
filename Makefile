@@ -5,7 +5,7 @@ ifneq (command line,$(origin CXX))
   CXX := clang++
 endif
 
-CXXFLAGS := -std=c++20 -Isrc -O3 -march=native #-ffast-math
+CXXFLAGS := -std=c++20 -Isrc -O2 #-march=native -ffast-math
 
 all: $(executables)
 

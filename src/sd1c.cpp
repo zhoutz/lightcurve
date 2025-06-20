@@ -22,9 +22,11 @@ int main() {
   double obs_theta = 90. * degree;
   double D = 0.2 * kpc_in_km;
   double frequency_nu = 200.0; // Hz
-  int n_phase = 200;
+  int n_phase = 400;
 
   double u = Mstar / Rstar * schwarzschild_radius_of_sun; // compactness
+  // double u = 0.1723 * 2;
+  // std::cout << "u: " << u << "\n";
   double uu = std::sqrt(1. - u);
   double dS = two_pi * Rstar * Rstar * (1. - std::cos(spot_angular_radius));
   double D2 = D * D;
@@ -63,7 +65,7 @@ int main() {
 
     dbg_file << std::setprecision(16);
     dbg_file << phase << " ";
-    dbg_file << cos_xi << '\n';
+    dbg_file << cos_psi << '\n';
 
     std::cout << std::setprecision(10);
     std::cout << "phase: " << phase << ", ";

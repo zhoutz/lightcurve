@@ -8,9 +8,6 @@
 #include <vector>
 
 double cal_cos_psi(double obs_theta, double spot_theta, double spot_phi) {
-  // obs_theta: angle between the observer and the star's axis
-  // spot_theta: angle between the star's axis and the spot
-  // spot_phi: angle between the observer and the spot
   return std::cos(obs_theta) * std::cos(spot_theta) +
          std::sin(obs_theta) * std::sin(spot_theta) * std::cos(spot_phi);
 }

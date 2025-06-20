@@ -5,9 +5,6 @@
 #include <iostream>
 
 double cal_cos_psi(double obs_theta, double spot_theta, double spot_phi) {
-  // obs_theta: angle between the observer and the star's axis
-  // spot_theta: angle between the star's axis and the spot
-  // spot_phi: angle between the observer and the spot
   return std::cos(obs_theta) * std::cos(spot_theta) +
          std::sin(obs_theta) * std::sin(spot_theta) * std::cos(spot_phi);
 }
@@ -67,17 +64,17 @@ int main() {
 
     std::cout << std::setprecision(10);
     std::cout << "phase: " << phase << ", ";
-    std::cout << "delta_phase: " << delta_phase << ",";
-    std::cout << "cos_psi: " << cos_psi << ", ";
-    std::cout << "cos_alpha: " << cos_alpha << ", ";
-    std::cout << "lensing_factor: " << lensing_factor << ", ";
+    // std::cout << "delta_phase: " << delta_phase << ",";
+    // std::cout << "cos_psi: " << cos_psi << ", ";
+    // std::cout << "cos_alpha: " << cos_alpha << ", ";
+    // std::cout << "lensing_factor: " << lensing_factor << ", ";
     // std::cout << "dt: " << dt << ", ";
-    std::cout << "E_emit: " << E_emit << ", ";
-    std::cout << "total_flux: " << total_flux << ", ";
+    // std::cout << "E_emit: " << E_emit << ", ";
+    // std::cout << "total_flux: " << total_flux << ", ";
     std::cout << "\n";
 
     out_file << std::setprecision(16);
-    out_file << phase << " " << delta_phase << " " << total_flux << "\n";
+    out_file << phase << " " << total_flux << " " << delta_phase << "\n";
     // if (i == 2) break; // for testing, remove this line to calculate all phases
   }
 }

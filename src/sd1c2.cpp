@@ -1,13 +1,9 @@
+#include "gradient.hpp"
 #include "lensing_table.hpp"
 #include "unit.hpp"
 #include <cmath>
 #include <iomanip>
 #include <iostream>
-
-double cal_cos_psi(double obs_theta, double spot_theta, double spot_phi) {
-  return std::cos(obs_theta) * std::cos(spot_theta) +
-         std::sin(obs_theta) * std::sin(spot_theta) * std::cos(spot_phi);
-}
 
 int main() {
   double Mstar = 1.4; // M_sun;
@@ -22,24 +18,21 @@ int main() {
   int n_phase = 800;
 
   double u = Mstar / Rstar * schwarzschild_radius_of_sun; // compactness
-  // double u = 0.1723 * 2;
-  // std::cout << "u: " << u << "\n";
   double uu = std::sqrt(1. - u);
   double dS = two_pi * Rstar * Rstar * (1. - std::cos(spot_angular_radius));
   double D2 = D * D;
   double frequency_Omega = frequency_nu * two_pi; // rad/s
+  double cc = std::cos(obs_theta) * std::cos(spot_theta);
+  double ss = std::sin(obs_theta) * std::sin(spot_theta);
 
   LensingTable lt;
 
-  std::string out_fname = "sd1.txt";
-  std::ofstream out_file(out_fname);
+  std::vector<double> phase_s(n_phase), phase_o(n_phase), total_fluxes(n_phase);
 
-  std::ofstream dbg_file("dbg.txt");
-
-  for (int i = 0; i < n_phase; ++i) {
-    double phase = double(i) / n_phase;
+  for (int i_phase = 0; i_phase < n_phase; ++i_phase) {
+    double phase = double(i_phase) / n_phase;
     double spot_phi = two_pi * phase;
-    double cos_psi = cal_cos_psi(obs_theta, spot_theta, spot_phi);
+    double cos_psi = cc + ss * std::cos(spot_phi);
     if (cos_psi < lt.cos_psi.back()) continue;
     auto [cos_alpha, lensing_factor, dt] = lt.cal_lens_of_cos_psi(cos_psi);
 
@@ -60,23 +53,23 @@ int main() {
     double total_flux =
         uu * delta3 * Ibb(E_emit, kT) * cos_alpha * lensing_factor * dS / D2 / gamma;
 
-    dbg_file << std::setprecision(16);
-    dbg_file << phase << " ";
-    dbg_file << cos_psi << '\n';
+    phase_s[i_phase] = phase;
+    phase_o[i_phase] = phase + delta_phase;
+    total_fluxes[i_phase] = total_flux;
 
     std::cout << std::setprecision(10);
     std::cout << "phase: " << phase << ", ";
     std::cout << "delta_phase: " << delta_phase << ",";
-    // std::cout << "cos_psi: " << cos_psi << ", ";
-    // std::cout << "cos_alpha: " << cos_alpha << ", ";
-    // std::cout << "lensing_factor: " << lensing_factor << ", ";
-    // std::cout << "dt: " << dt << ", ";
-    // std::cout << "E_emit: " << E_emit << ", ";
     std::cout << "total_flux: " << total_flux << ", ";
     std::cout << "\n";
+  }
 
-    out_file << std::setprecision(16);
-    out_file << phase << " " << total_flux << " " << delta_phase << "\n";
-    // if (i == 2) break; // for testing, remove this line to calculate all phases
+  auto dphase = gradient(phase_s, phase_o);
+
+  std::ofstream out_file("sd1.txt");
+  out_file << std::setprecision(16);
+  for (int i = 0; i < n_phase; ++i) {
+    out_file << phase_o[i] << " ";
+    out_file << total_fluxes[i] * dphase[i] << "\n";
   }
 }

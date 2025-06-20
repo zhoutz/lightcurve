@@ -1,6 +1,9 @@
+#include "gradient.hpp"
 #include "grid.hpp"
 #include "lensing_table.hpp"
+#include "linear_interp.hpp"
 #include "unit.hpp"
+#include <algorithm>
 #include <cmath>
 #include <cstdlib>
 #include <iomanip>
@@ -49,7 +52,13 @@ int main() {
 
   std::vector<double> total_fluxes(n_phase, 0.0);
 
-  std::vector<double> fluxes_div_I(n_phase), redshift_factors(n_phase);
+  std::vector<double> fluxes_div_I(n_phase), redshift_factors(n_phase), colatitude_fluxes(n_phase),
+      phase_s(n_phase), phase_o(n_phase), phase_output(n_phase);
+
+  for (int i_phase = 0; i_phase < n_phase; ++i_phase) {
+    phase_output[i_phase] = double(i_phase) / n_phase;
+  }
+
   for (auto const &[i, jt] : grid_spots.spots) {
     double spot_theta = grid_spots.theta[i];
     double dOmega = grid_spots.dOmega(i);
@@ -81,16 +90,36 @@ int main() {
 
       fluxes_div_I[i_phase] = uu * delta3 * cos_alpha * lensing_factor * dS / D2 / gamma;
       redshift_factors[i_phase] = 1. / (delta * uu);
+      phase_s[i_phase] = phase;
+      phase_o[i_phase] = phase + delta_phase;
     }
 
+    std::ranges::fill(colatitude_fluxes, 0.);
     for (auto const &[j, kt] : jt) {
       for (int i_phase = 0; i_phase < n_phase; ++i_phase) {
         if (fluxes_div_I[i_phase] == 0) continue;
         int target_phase = (i_phase + j) % n_phase;
         double target_flux = Ibb(E_obs * redshift_factors[i_phase], kt) * fluxes_div_I[i_phase];
-        total_fluxes[target_phase] += target_flux;
+        colatitude_fluxes[target_phase] += target_flux;
       }
     }
+
+    auto dphase = gradient(phase_s, phase_o);
+    for (int i_phase = 0; i_phase < n_phase; ++i_phase) {
+      if (fluxes_div_I[i_phase] == 0) continue;
+      colatitude_fluxes[i_phase] *= dphase[i_phase];
+      total_fluxes[i_phase] += colatitude_fluxes[i_phase];
+    }
+
+    // LinearInterp li;
+    // li.reset(phase_o.data(), phase_o.size());
+    // for (int i_phase = 0; i_phase < n_phase; ++i_phase) {
+    //   double target_phase = phase_output[i_phase];
+    //   int i = li.hunt(target_phase);
+    //   double flux_output = li.lin_interp(target_phase, phase_o[i], phase_o[i + 1],
+    //                                      colatitude_fluxes[i], colatitude_fluxes[i + 1]);
+    //   total_fluxes[i_phase] += flux_output;
+    // }
   }
 
   std::ofstream out_file("sd1.txt");

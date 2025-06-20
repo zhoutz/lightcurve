@@ -4,11 +4,6 @@
 #include <iomanip>
 #include <iostream>
 
-double cal_cos_psi(double obs_theta, double spot_theta, double spot_phi) {
-  return std::cos(obs_theta) * std::cos(spot_theta) +
-         std::sin(obs_theta) * std::sin(spot_theta) * std::cos(spot_phi);
-}
-
 int main() {
   double Mstar = 1.4; // M_sun;
   double Rstar = 12;  // km
@@ -26,6 +21,8 @@ int main() {
   double dS = two_pi * Rstar * Rstar * (1. - std::cos(spot_angular_radius));
   double D2 = D * D;
   double frequency_Omega = frequency_nu * two_pi; // rad/s
+  double cc = std::cos(obs_theta) * std::cos(spot_theta);
+  double ss = std::sin(obs_theta) * std::sin(spot_theta);
 
   LensingTable lt;
 
@@ -37,7 +34,7 @@ int main() {
   for (int i = 0; i < n_phase; ++i) {
     double phase = double(i) / n_phase;
     double spot_phi = two_pi * phase;
-    double cos_psi = cal_cos_psi(obs_theta, spot_theta, spot_phi);
+    double cos_psi = cc + ss * std::cos(spot_phi);
     if (cos_psi < lt.cos_psi.back()) continue;
     auto [cos_alpha, lensing_factor, dt] = lt.cal_lens_of_cos_psi(cos_psi);
 

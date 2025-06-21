@@ -51,7 +51,7 @@ int main() {
 
   std::vector<double> fluxes_div_I(n_phase), redshift_factors(n_phase);
   for (auto const &[i, jt] : grid_spots.spots) {
-    double spot_theta = grid_spots.theta[i];
+    double spot_theta = grid_spots.get_theta(i);
     double dOmega = grid_spots.dOmega(i);
     double dS = dOmega * R2;
 
@@ -60,7 +60,7 @@ int main() {
 
     for (int i_phase = 0; i_phase < n_phase; ++i_phase) {
       double phase = double(i_phase) / n_phase;
-      double spot_phi = two_pi * phase + grid_spots.phi[0];
+      double spot_phi = two_pi * phase + grid_spots.get_phi(i, 0);
       double cos_psi = cc + ss * std::cos(spot_phi);
       if (cos_psi < lt.cos_psi.back()) {
         fluxes_div_I[i_phase] = 0;
@@ -76,9 +76,7 @@ int main() {
       double gamma = 1. / std::sqrt(1. - beta * beta);
       double cos_xi = -sin_alpha_over_sin_psi * std::sin(obs_theta) * std::sin(spot_phi);
       double delta = 1. / (gamma * (1. - beta * cos_xi));
-      double delta2 = delta * delta;
-      double delta3 = delta2 * delta;
-      double delta4 = delta2 * delta2;
+      double delta3 = delta * delta * delta;
       double delta_phase = dt * frequency_nu;
 
       fluxes_div_I[i_phase] = uu * delta3 * cos_alpha * lensing_factor * dS / D2 / gamma;

@@ -59,7 +59,7 @@ int main() {
   }
 
   for (auto const &[i, jt] : grid_spots.spots) {
-    double spot_theta = grid_spots.theta[i];
+    double spot_theta = grid_spots.get_theta(i);
     double dOmega = grid_spots.dOmega(i);
     double dS = dOmega * R2;
 
@@ -68,7 +68,7 @@ int main() {
 
     for (int i_phase = 0; i_phase < n_phase; ++i_phase) {
       double phase = double(i_phase) / n_phase;
-      double spot_phi = two_pi * phase + grid_spots.phi[0];
+      double spot_phi = two_pi * phase + grid_spots.get_phi(i, 0);
 
       double cos_psi = cc + ss * std::cos(spot_phi);
       if (cos_psi < lt.cos_psi.back()) {

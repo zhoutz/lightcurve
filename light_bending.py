@@ -33,10 +33,6 @@ c = 299792458
 
 alpha = np.linspace(0, np.pi / 2, 1024)
 psi_dt = cal_psi_dt(u, alpha)
-
-# psi_max = 
-
-
 psi = psi_dt[0]
 dt = psi_dt[1] * R * 1e3 / c
 

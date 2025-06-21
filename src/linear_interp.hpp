@@ -8,11 +8,10 @@ struct LinearInterp {
 
   LinearInterp() : n(0), jsav(0), xx(nullptr) {}
 
-  LinearInterp(double const *x, double const *y, int n_)
-      : n(n_), jsav(0), xx(x) {}
+  LinearInterp(double const *x, double const *y, int n_) : n(n_), jsav(0), xx(x) {}
 
   void reset(double const *x, int n_) {
-    jsav = n_ - 1;
+    jsav = 0;
     n = n_;
     xx = x;
   }
@@ -64,8 +63,7 @@ struct LinearInterp {
     return std::max(0, std::min(n - 2, jl));
   }
 
-  static double lin_interp(double x, double x1, double x2, double y1,
-                           double y2) {
+  static double lin_interp(double x, double x1, double x2, double y1, double y2) {
     if (x1 == x2) {
       return y1;
     } else {
@@ -73,8 +71,7 @@ struct LinearInterp {
     }
   }
 
-  static double log_interp(double x, double x1, double x2, double y1,
-                           double y2) {
+  static double log_interp(double x, double x1, double x2, double y1, double y2) {
     if (x1 == x2) {
       return y1;
     } else {

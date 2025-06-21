@@ -3,16 +3,19 @@
 #include "lensing_table.hpp"
 #include "linear_interp.hpp"
 #include "unit.hpp"
+#include <chrono>
 #include <cmath>
 #include <cstdlib>
 #include <iomanip>
 #include <iostream>
 #include <vector>
 
+double frequency_nu, spot_theta, obs_theta;
+
 double temperature_profile(double grid_theta, double grid_phi) {
   double kT = 0.35; // temperature in keV
   double spot_angular_radius = 1.0;
-  double spot_theta = 90. * degree;
+  // double spot_theta = 20. * degree;
   double spot_phi = 0;
 
   double s1 = std::sin(grid_theta);
@@ -69,15 +72,23 @@ void fill_phase_o(std::vector<double> &phase_o) {
   }
 }
 
-int main() {
+int main(int argc, char *argv[]) {
+  if (argc != 4) {
+    std::cout << "Usage: " << argv[0] << " <frequency_nu> <spot_theta> <obs_theta>\n";
+  } else {
+    frequency_nu = std::atof(argv[1]);
+    spot_theta = std::atof(argv[2]) * degree;
+    obs_theta = std::atof(argv[3]) * degree;
+  }
+
   double Mstar = 1.4; // M_sun;
   double Rstar = 12;  // km
   double E_obs = 1.0; // keV
 
-  double obs_theta = 90. * degree;
+  // double obs_theta = 80. * degree;
   double D = 0.2 * kpc_in_km;
-  double frequency_nu = 1.0; // Hz
-  int n_phase = 300;
+  // double frequency_nu = 400.0; // Hz
+  int n_phase = 250;
 
   double u = Mstar / Rstar * schwarzschild_radius_of_sun; // compactness
   double uu = std::sqrt(1. - u);
@@ -86,7 +97,7 @@ int main() {
   double frequency_Omega = frequency_nu * two_pi; // rad/s
 
   LensingTable lt;
-  GridSpots grid_spots(300, n_phase);
+  GridSpots grid_spots(250, n_phase);
   grid_spots.init_map(temperature_profile);
 
   std::vector<double> total_fluxes(n_phase, 0.0), phase_output(n_phase);
@@ -99,6 +110,8 @@ int main() {
   for (int i_phase = 0; i_phase < n_phase; ++i_phase) {
     phase_output[i_phase] = double(i_phase) / n_phase;
   }
+
+  auto time_start = std::chrono::high_resolution_clock::now();
 
   for (auto const &[i, jt] : grid_spots.spots) {
     double spot_theta = grid_spots.get_theta(i);
@@ -159,6 +172,10 @@ int main() {
       }
     }
   }
+
+  auto time_end = std::chrono::high_resolution_clock::now();
+  double t_ms = std::chrono::duration<double, std::milli>(time_end - time_start).count();
+  std::cout << "Time taken: " << t_ms << " ms\n";
 
   std::ofstream out_file("sd1.txt");
   out_file << std::setprecision(16);

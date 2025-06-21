@@ -12,7 +12,7 @@
 double temperature_profile(double grid_theta, double grid_phi) {
   double kT = 0.35; // temperature in keV
   double spot_angular_radius = 1.0;
-  double spot_theta = 90. * degree;
+  double spot_theta = 20. * degree;
   double spot_phi = 0;
 
   double s1 = std::sin(grid_theta);
@@ -74,9 +74,9 @@ int main() {
   double Rstar = 12;  // km
   double E_obs = 1.0; // keV
 
-  double obs_theta = 90. * degree;
+  double obs_theta = 80. * degree;
   double D = 0.2 * kpc_in_km;
-  double frequency_nu = 1.0; // Hz
+  double frequency_nu = 400.0; // Hz
   int n_phase = 300;
 
   double u = Mstar / Rstar * schwarzschild_radius_of_sun; // compactness

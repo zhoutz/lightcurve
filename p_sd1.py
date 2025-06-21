@@ -26,8 +26,8 @@ if True:
     rel_err = (yhat - y) / np.median(y) * 1e3
     plt.twinx()
     plt.plot(dat2[:, 0], rel_err, "r--")
-    plt.ylim(-10, 10)
-    plt.hlines([-1, 1], 0, 1, color="r", lw=0.5)
+    plt.ylim(-5, 5)
+    plt.hlines([-1, 0, 1], 0, 1, color="r", lw=0.5)
     plt.yticks(color="r")
 
 plt.show()

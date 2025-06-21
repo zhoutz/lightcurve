@@ -76,7 +76,7 @@ int main() {
 
   double obs_theta = 90. * degree;
   double D = 0.2 * kpc_in_km;
-  double frequency_nu = 1.0; // Hz
+  double frequency_nu = 200.0; // Hz
   int n_phase = 300;
 
   double u = Mstar / Rstar * schwarzschild_radius_of_sun; // compactness

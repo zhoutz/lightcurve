@@ -26,6 +26,6 @@ if True:
     rel_err = (yhat - y) / y
     plt.twinx()
     plt.plot(dat2[:, 0], rel_err, "r--")
-    plt.ylim(-0.001, 0.001)
+    plt.ylim(-0.01, 0.01)
 
 plt.show()

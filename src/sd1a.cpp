@@ -46,14 +46,12 @@ int main() {
     double gamma = 1. / std::sqrt(1. - beta * beta);
     double cos_xi = -sin_alpha_over_sin_psi * std::sin(obs_theta) * std::sin(spot_phi);
     double delta = 1. / (gamma * (1. - beta * cos_xi));
-    double delta2 = delta * delta;
-    double delta4 = delta2 * delta2;
+    double delta3 = delta * delta * delta;
     double E_emit = E_obs / (delta * uu);
     double delta_phase = dt * frequency_nu;
 
-    double delta4gamma = delta4 * gamma;
-
-    double total_flux = uu * delta4gamma * Ibb(E_emit, kT) * cos_alpha * lensing_factor * dS / D2;
+    double total_flux =
+        uu * delta3 * Ibb(E_emit, kT) * cos_alpha * lensing_factor * dS / D2 / gamma;
 
     dbg_file << std::setprecision(16);
     dbg_file << phase << " ";

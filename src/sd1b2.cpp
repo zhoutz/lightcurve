@@ -37,7 +37,7 @@ int main() {
   double obs_theta = 90. * degree;
   double D = 0.2 * kpc_in_km;
   double frequency_nu = 1.0; // Hz
-  int n_phase = 1000;
+  int n_phase = 300;
 
   double u = Mstar / Rstar * schwarzschild_radius_of_sun; // compactness
   double uu = std::sqrt(1. - u);
@@ -46,7 +46,7 @@ int main() {
   double frequency_Omega = frequency_nu * two_pi; // rad/s
 
   LensingTable lt;
-  GridSpots grid_spots(1000, n_phase);
+  GridSpots grid_spots(300, n_phase);
   grid_spots.init_map(temperature_profile);
 
   std::vector<double> total_fluxes(n_phase, 0.0), phase_output(n_phase);
@@ -110,7 +110,7 @@ int main() {
       li.reset(phase_o.data(), phase_o.size());
       for (int i_phase = 0; i_phase < n_phase; ++i_phase) {
         double phase_shift = double(j) / n_phase;
-        double target_phase = std::fmod(phase_output[i_phase] - phase_shift + 1., 1.);
+        double target_phase = std::fmod(phase_output[i_phase] + phase_shift + 1., 1.);
         int i = li.hunt(target_phase);
         double flux_output = li.lin_interp(target_phase, phase_o[i], phase_o[i + 1],
                                            single_patch_fluxes[i], single_patch_fluxes[i + 1]);

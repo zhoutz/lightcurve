@@ -23,9 +23,11 @@ plt.plot(dat2[:, 0], dat2[:, 1], ".", ms=1)
 if True:
     yhat = np.interp(dat2[:, 0], dat1[:, 0], dat1[:, 1])
     y = dat2[:, 1]
-    rel_err = (yhat - y) / y
+    rel_err = (yhat - y) / np.median(y) * 1e3
     plt.twinx()
     plt.plot(dat2[:, 0], rel_err, "r--")
-    plt.ylim(-0.01, 0.01)
+    plt.ylim(-10, 10)
+    plt.hlines([-1, 1], 0, 1, color="r", lw=0.5)
+    plt.yticks(color="r")
 
 plt.show()

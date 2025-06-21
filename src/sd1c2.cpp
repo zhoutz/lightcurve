@@ -44,9 +44,7 @@ int main() {
     double gamma = 1. / std::sqrt(1. - beta * beta);
     double cos_xi = -sin_alpha_over_sin_psi * std::sin(obs_theta) * std::sin(spot_phi);
     double delta = 1. / (gamma * (1. - beta * cos_xi));
-    double delta2 = delta * delta;
-    double delta3 = delta2 * delta;
-    double delta4 = delta2 * delta2;
+    double delta3 = delta * delta * delta;
     double E_emit = E_obs / (delta * uu);
     double delta_phase = dt * frequency_nu;
 

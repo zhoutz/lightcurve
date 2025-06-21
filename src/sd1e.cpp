@@ -86,9 +86,7 @@ int main() {
       double gamma = 1. / std::sqrt(1. - beta * beta);
       double cos_xi = -sin_alpha_over_sin_psi * std::sin(obs_theta) * std::sin(spot_phi);
       double delta = 1. / (gamma * (1. - beta * cos_xi));
-      double delta2 = delta * delta;
-      double delta3 = delta2 * delta;
-      double delta4 = delta2 * delta2;
+      double delta3 = delta * delta * delta;
       double delta_phase = dt * frequency_nu;
 
       fluxes_div_I[i_phase] = uu * delta3 * cos_alpha * lensing_factor * dS / D2 / gamma;
@@ -112,7 +110,7 @@ int main() {
       li.reset(phase_o.data(), phase_o.size());
       for (int i_phase = 0; i_phase < n_phase; ++i_phase) {
         double phase_shift = double(j) / n_phase;
-        double target_phase = std::fmod(phase_output[i_phase] - phase_shift + 1., 1.);
+        double target_phase = std::fmod(phase_output[i_phase] + phase_shift + 1., 1.);
         int i = li.hunt(target_phase);
         double flux_output = li.lin_interp(target_phase, phase_o[i], phase_o[i + 1],
                                            single_patch_fluxes[i], single_patch_fluxes[i + 1]);
